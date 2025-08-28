@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Kavishe Moto Manual — Mafunzo ya Kuendesha na Matengenezo ya Pikipiki</title>
+<style>
+  :root{
+    --bg:#071225;--card:#0e1c33;--ink:#eaf3ff;--muted:#9fb6db;
+    --accent:#3fa9f5; --good:#33d17a; --warn:#ffd166; --bad:#ff6b6b;
+    --pad:14px; --br:12px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin:0; padding-bottom:80px;
+    background:var(--bg);
+    color:var(--ink);
+    font-family: system-ui, Segoe UI, Roboto, Arial;
+  }
+  header {
+    padding:20px;
+    text-align:center;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  h1 {
+    margin:0;
+    font-size:1.6rem;
+  }
+  .kicker {
+    color:var(--muted);
+    margin-top:6px;
+    font-size:1rem;
+  }
+  nav {
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    flex-wrap:wrap;
+    margin-top:12px;
+  }
+  .btn {
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.03);
+    color: var(--ink);
+    padding: 10px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .btn.accent {
+    background: var(--accent);
+    color: #021026;
+  }
+  .btn:hover {
+    background:#0a2a5e;
+  }
+  .container {
+    max-width:1100px;
+    margin:18px auto;
+    padding:0 15px;
+  }
+  .card {
+    background: var(--card);
+    border-radius: var(--br);
+    padding: var(--pad);
+    margin-bottom: 12px;
+    border: 1px solid rgba(255,255,255,0.02);
+  }
+  .hidden { display:none; }
+  .muted { color: var(--muted); }
+  input, textarea, select, button { font-family: inherit; }
+  input, textarea {
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,0.04);
+    background: transparent;
+    color: var(--ink);
+    margin-top:8px;
+  }
+  textarea { min-height:120px; }
+  .result-card {
+    background:#07172a;
+    padding:15px;
+    border-radius:12px;
+    margin-top:16px;
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .flex {
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .pill {
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.02);
+    color:var(--muted);
+    cursor:pointer;
+    user-select:none;
+  }
+  .small {
+    font-size:0.92rem;
+    color:var(--muted);
+  }
+  .video-embed {
+    margin-top:10px;
+    border-radius:10px;
+    overflow:hidden;
+  }
+  footer {
+    color: var(--muted);
+    text-align:center;
+    margin-top:24px;
+    padding:18px;
+  }
+  .acc {
+    margin-bottom:10px;
+    border-radius:var(--br);
+    border:1px solid rgba(255,255,255,0.04);
+    background: var(--card);
+    overflow:hidden;
+  }
+  .acc-sum {
+    padding:12px;
+    cursor:pointer;
+    background: linear-gradient(180deg, rgba(255,255,255,.01), transparent);
+    user-select:none;
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+  }
+  .acc-body {
+    display:none;
+    padding:12px;
+    border-top:1px solid rgba(255,255,255,0.02);
+  }
+  .acc.open .acc-body {
+    display:block;
+  }
+  .badge {
+    font-size:0.75rem;
+    background:rgba(255,255,255,0.03);
+    padding:4px 8px;
+    border-radius:8px;
+    color:var(--muted);
+    user-select:none;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Kavishe Moto Manual — Mafunzo ya Kuendesha na Matengenezo ya Pikipiki</h1>
+  <div class="kicker">
+    Pata mafunzo kamili ya kuendesha pikipiki kwa hatua, matengenezo yote muhimu na usaidizi kwa tatizo lolote. Video tutorials zipo YouTube.
+  </div>
+  <nav>
+    <button class="btn accent" onclick="goto('search')">Andika Tatizo & Pata Suluhisho</button>
+    <button class="btn" onclick="goto('modules')">Modules Kamili</button>
+    <button class="btn" onclick="goto('learn')">Video Tutorials</button>
+    <button class="btn" onclick="goto('notes')">Noti & Chapisha</button>
+  </nav>
+</header>
+
+<main class="container">
+
+  <section id="search" class="card">
+    <h2>Andika Tatizo / Dalili</h2>
+    <div class="muted">Mfano: "haiwaki", "starter inazungusha", "taa imezima", "breki hazishiki", "clutch teleza".</div>
+    <div style="margin-top:12px;">
+      <input id="q" placeholder="Andika hapa... (Sw / En)"/>
+      <div class="flex" style="margin-top:8px;">
+        <button class="btn accent" onclick="searchFix()">Tafuta Suluhisho</button>
+        <button class="btn" onclick="showAll()">Tazama Modules Zote</button>
+        <button class="btn" onclick="showGeneric()">Checklist ya Tatizo</button>
+      </div>
+    </div>
+    <div id="searchResults"></div>
+  </section>
+
+  <section id="modules" class="card hidden">
+    <h2>Modules za Kuendesha na Matengenezo ya Pikipiki</h2>
+    <div class="muted">
+      Chagua module kutazama maelezo ya kina, hatua kwa hatua, zana na video za kujifunza kwa Kiswahili.
+    </div>
+    <div id="moduleList" style="margin-top:12px"></div>
+  </section>
+
+  <section id="learn" class="card hidden">
+    <h2>Video Tutorials za Mafunzo & Matengenezo</h2>
+    <div class="muted">Links za video za YouTube kwa kila module ya mafunzo na matengenezo.</div>
+    <div id="videoList" style="margin-top:12px"></div>
+  </section>
+
+  <section id="notes" class="card hidden">
+    <h2>Noti Za Kazi & Chapisha PDF</h2>
+    <textarea id="notesArea" placeholder="Andika noti, taratibu, sehemu, vendor..."></textarea>
+    <div class="flex" style="margin-top:8px;">
+      <button class="btn accent" onclick="saveNotes()">Hifadhi Noti</button>
+      <button class="btn" onclick="printPage()">Chapisha / PDF</button>
+      <button class="btn" onclick="clearNotes()">Futa Noti</button>
+    </div>
+    <div id="notesStatus" class="small"></div>
+  </section>
+</main>
+
+<footer>© <span id="yr"></span> Kavishe Moto Manual — Hifadhi kama index.html kisha pakia AppGeyser au tovuti.</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  function goto(id){
+    ['search','modules','learn','notes'].forEach(x=>{
+      document.getElementById(x).classList.add('hidden');
+    });
+    document.getElementById(id).classList.remove('hidden');
+    window.scrollTo({top:document.getElementById(id).offsetTop,behavior:'smooth'});
+  }
+
+  function printPage(){ window.print(); }
+
+  function saveNotes(){
+    localStorage.setItem('kavishe_notes', document.getElementById('notesArea').value || '');
+    document.getElementById('notesStatus').textContent = ' Noti zimehifadhiwa kwenye kifaa chako';
+    setTimeout(()=>document.getElementById('notesStatus').textContent='', 2500);
+  }
+
+  function clearNotes(){
+    localStorage.removeItem('kavishe_notes');
+    document.getElementById('notesArea').value = '';
+  }
+
+  (function loadNotes(){
+    const v = localStorage.getItem('kavishe_notes');
+    if(v) document.getElementById('notesArea').value = v;
+  })();
+
+  const KB = [
+    {
+      title: "Mafunzo ya Kuendesha Pikipiki",
+      keywords: ["kuendesha", "hatua", "kuanzisha", "clutch", "gas", "helmet", "breki", "miwelekeo", "kazi"],
+      tools: ["Helmet", "Gloves", "Viatu vya Usalama"],
+      tags: ["kuendesha", "usalama"],
+      video: "https://www.youtube.com/results?search_query=jifunze+kuendesha+pikipiki+hatua+kwa+hatua",
+      steps: [
+        "1) Vaa helmet salama na vifaa vya usalama kabla ya kuanza kuendesha pikipiki.",
+        "2) Washa pikipiki kwa kuweka switch ya nguvu (power switch) kuwa ON.",
+        "3) Bonyeza kitufe cha start au tambua kamba ya kuwasha ili injini ichomeke.",
+        "4) Jifunze kutumia clutch (kundi) kwa kupanda gear ya kwanza kwa taratibu.",
+        "5) Panda gear ya kwanza kwa kufungua clutch polepole huku ukiongeza throttle (gas) kwa hatua.",
+        "6) Timiza breki polepole na kwa tahadhari ili kusimama.",
+        "7) Tumia ishara za mkono au taa kuonyesha mwelekeo wa kugeuka au kupita kwenye barabara.",
+        "8) Endesha kwa mwendo wa polepole hasa maeneo yenye watu wengi.",
+        "9) Fanya mazoezi mara kwa mara ili kuongeza ujuzi na kuweza kudhibiti pikipiki.",
+        "10) Jifunze kuzima pikipiki kwa kuondoa switch ya nguvu na kuzima injini kwa usalama."
+      ]
+    },
+    {
+      title: "Fremu na Mwili wa Pikipiki",
+      keywords: ["fremu", "frame", "mwili", "cracks", "weld", "plastic"],
+      tools: ["Kimwega cha kuona", "Tochi", "Torque wrench", "Feeler gauge"],
+      tags: ["fremu", "mwili", "usalama"],
+      video: "https://www.youtube.com/results?search_query=motorcycle+frame+inspection",
+      steps: [
+        "1) Pitia fremu kwa makini, hakikisha haina mikwaruzo au nyufa.",
+        "2) Angalia welds (sehemu zilizolewa) kwa ishara za uharibifu.",
+        "3) Pima bolts na torque zilizopangwa kwa usahihi.",
+        "4) Hakikisha sehemu za plastiki hazijavunjika na zipo salama."
+      ]
+    },
+    {
+      title: "Magurudumu na Bearings",
+      keywords: ["magurudumu", "bearings", "rim", "hub", "wobble"],
+      tools: ["Spoke wrench", "Dial indicator", "Bearing puller", "Grease"],
+      tags: ["magurudumu", "bearings"],
+      video: "https://www.youtube.com/results?search_query=wheel+bearing+motorcycle+replacement",
+      steps: [
+        "1) Pima wobble (kutetemeka) kwa kuzungusha gurudumu.",
+        "2) Angalia bearing play kwa kuangalia michezo yenye hatari.",
+        "3) Pima usawa wa spokes na ubora wa gurudumu.",
+        "4) Saga bearings na upakie mafuta."
+      ]
+    },
+    {
+      title: "Mipira (Tires)",
+      keywords: ["tairi", "tire", "puncture", "pressure", "flat"],
+      tools: ["Tire levers", "Patch kit", "Pressure gauge", "Compressor"],
+      tags: ["tairi", "usalama"],
+      video: "https://www.youtube.com/results?search_query=motorcycle+tire+puncture+repair",
+      steps: [
+        "1) Kagua presha ya tairi kwa mbinu sahihi.",
+        "2) Angalia uvujaji au matobo kwenye tairi.",
+        "3) Tunza tairi kwa kutumia vifaa maalum vya kurekebisha puncture.",
+        "4) Kereketsha au gezinnen maisha ya tairi."
+      ]
+    },
+    {
+      title: "Mfumo wa Suspension",
+      keywords: ["suspension", "fork", "shock", "seal", "oil"],
+      tools: ["Seal driver", "Fork oil", "Torque wrench", "Spanner"],
+      tags: ["suspension"],
+      video: "https://www.youtube.com/results?search_query=motorcycle+fork+seal+replacement",
+      steps: [
+        "1) Angalia mafuta yanayotiririka kwenye fork seal.",
+        "2) Ondoa fork legs kwa hati, badilisha mafuta na seals.",
+        "3) Rekebisha shock ya nyuma kwa uwiano wa mzigo."
+      ]
+    },
+    {
+      title: "Mfumo wa Breki",
+      keywords: ["breki", "disc", "pad", "fluid", "bleed"],
+      tools: ["Bleed kit", "Brake fluid DOT3/DOT4", "Torque wrench", "Brake caliper tool"],
+      tags: ["breki", "usalama"],
+      video: "https://www.youtube.com/results?search_query=motorcycle+brake+bleed",
+      steps: [
+        "1) Angalia unene wa brake pads, badilisha inapohitajika.",
+        "2) Fanya bleeding ya breki kuondoa hewa kwenye mfumo.",
+        "3) Badilisha maji ya breki kwa muda unaopendekezwa.",
+        "4) Hakikisha rotor iko katika hali nzuri."
+      ]
+    },
+    {
+      title: "Mnyororo na Sprocket",
+      keywords: ["chain", "sprocket", "lubrication", "slack"],
+      tools: ["Chain cleaner", "Chain lube", "Spanner", "Torque wrench"],
+      tags: ["mnyororo", "drivetrain"],
+      video: "https://www.youtube.com/results?search_query=motorcycle+chain+maintenance",
+      steps: [
+        "1) Safisha mnyororo kwa kuondoa uchafu.",
+        "2) Paka mafuta kwa usahihi kwa chain lube.",
+        "3) Angalia slack ya mnyororo na rekebisha.",
+        "4) Badilisha mnyororo na sprocket ukihitaji."
+      ]
+    },
+    {
+      title: "Mfumo wa Umeme",
+      keywords: ["umeme", "fuse", "wiring", "lights", "horn", "switch"],
+      tools: ["Fuse kit", "Multimeter", "Contact cleaner"],
+      tags: ["umeme", "electrical"],
+      video: "https://www.youtube.com/results?search_query=motorcycle+electrical+troubleshooting",
+      steps: [
+        "1) Angalia fuse na badilisha zilizovunjika.",
+        "2) Safisha na hakiki wiring na viunganisho vyake.",
+        "3) Hakikisha taa na horn zinawaka vizuri.",
+        "4) Pima swichi na kuhakikisha zinafanya kazi vizuri."
+      ]
+    }
+  ];
+
+  const quickTags = [
+    "haiwaki","taa imezima","starter inazungusha","breki hazishiki","clutch teleza",
+    "kupasuka kwa tairi","mkanda umejaa","pikipiki inawaka"
+  ];
+
+  window.onload = function() {
+    const moduleList = document.getElementById('moduleList');
+    const videoList = document.getElementById('videoList');
+    const quickTagDiv = document.getElementById('quickTags');
+
+    KB.forEach(module=>{
+      const acc = document.createElement('div');
+      acc.className = 'acc';
+      acc.innerHTML = `
+        <div class="acc-sum" onclick="toggleAcc(this)">${module.title} <span class="badge">${module.tags.join(', ')}</span></div>
+        <div class="acc-body">
+          <p><strong>Maneno Muhimu:</strong> ${module.keywords.join(', ')}</p>
+          <p><strong>Zana:</strong> ${module.tools.join(', ')}</p>
+          <p><strong>Hatua:</strong></p>
+          <ol>${module.steps.map(s=>`<li>${s}</li>`).join('')}</ol>
+          <p><a href="${module.video}" target="_blank">Tazama Video za Kujifunza</a></p>
+        </div>
+      `;
+      moduleList.appendChild(acc);
+
+      const v = document.createElement('div');
+      v.className = 'card';
+      v.style.marginBottom = '10px';
+      v.innerHTML = `<h4>${module.title}</h4><p><a href="${module.video}" target="_blank">${module.video}</a></p>`;
+      videoList.appendChild(v);
+    });
+
+    quickTags.forEach(tag => {
+      const btn = document.createElement('button');
+      btn.className = 'btn';
+      btn.style.padding = '6px 10px';
+      btn.textContent = tag;
+      btn.onclick = () => {
+        document.getElementById('q').value = tag;
+        searchFix();
+        goto('search');
+      };
+      quickTagDiv.appendChild(btn);
+    });
+
+    goto('search');
+  };
+
+  function toggleAcc(el){
+    el.parentElement.classList.toggle('open');
+  }
+
+  function searchFix(){
+    const qRaw = document.getElementById('q').value || '';
+    const q = qRaw.toLowerCase();
+    const wrap = document.getElementById('searchResults');
+    wrap.innerHTML = '';
+
+    if(!q.trim()){
+      alert('Tafadhali andika dalili au tatizo kwanza');
+      return;
+    }
+
+    const results = KB.filter(module => module.keywords.some(kw => q.includes(kw)));
+
+    if(results.length === 0){
+      wrap.innerHTML = `<div class="result-card"><strong>Matokeo hayapatikani kwa "${qRaw}".</strong><p>Tafadhali jaribu maneno mengine au tumia checklist.</p></div>`;
+      showGeneric();
+      return;
+    }
+
+    results.forEach(item=>{
+      const el = document.createElement('div');
+      el.className = 'result-card';
+      el.innerHTML = `
+        <h3>${item.title}</h3>
+        <p><strong>Zana:</strong> ${item.tools.join(', ')}</p>
+        <p><strong>Hatua:</strong></p>
+        <ol>${item.steps.map(step => `<li>${step}</li>`).join('')}</ol>
+        <p><a href="${item.video}" target="_blank">Tazama video za kujifunza</a></p>
+      `;
+      wrap.appendChild(el);
+    });
+  }
+
+  function showAll(){
+    goto('modules');
+  }
+
+  function showGeneric(){
+    const wrap = document.getElementById('searchResults');
+    wrap.innerHTML = `<div class="result-card"><h3>Checklist ya Udhibiti wa Tatizo</h3>
+      <ol>
+        <li>Angalia voltage ya betri na terminal.</li>
+        <li>Kagua fuse na swichi za umeme.</li>
+        <li>Angalia plugs za moto.</li>
+        <li>Thibitisha mfumo wa mafuta umefanya kazi.</li>
+        <li>Safisha filter ya hewa na uingizaji wa hewa.</li>
+        <li>Fanya compression test inapohitajika.</li>
+        <li>Kagua mfumo wa kuchaji betri.</li>
+      </ol>
+      <p class="muted">Fanya hatua moja baada ya nyingine hadi utambue chanzo cha tatizo.</p>
+    </div>`;
+  }
+</script>
+</body>
+</html>
